@@ -1,23 +1,16 @@
 import { FC, useState, useRef, useCallback } from "react";
-import { plotTilesRandomly, resetGrid } from "../helpers/board.helper";
+import {
+  gameLogic,
+  plotTilesRandomly,
+  resetGrid,
+} from "../helpers/board.helper";
 import { DeadOrAlive } from "../customTypes/game.types";
 import useInterval from "./UseInterval";
 
 const numberColumns = 35;
 const numberOfRows = 25;
 
-const cellSurroundingNeighbors = [
-  [0, 1], // Neighbor on the right
-  [0, -1], // Neighbor on the left
-  [1, -1], // Neighbor on the top left
-  [-1, 1], // Neighbor on the top right
-  [1, 1], // Neighbor on the top
-  [-1, -1], // Neighbor on the bottom
-  [1, 0], // Neighbor on the bottom right
-  [-1, 0], // Neighbor on the bottom left
-];
-
-const App: FC = () => {
+const Board: FC = () => {
   const [grid, setGrid] = useState(() => {
     return plotTilesRandomly(numberOfRows, numberColumns);
   });
@@ -29,34 +22,7 @@ const App: FC = () => {
   const startGame = useCallback((grid: number[][]) => {
     if (!runningRef.current) return;
 
-    let gridCopy = JSON.parse(JSON.stringify(grid));
-    for (let i = 0; i < numberOfRows; i++) {
-      for (let j = 0; j < numberColumns; j++) {
-        let neighbouringCells = 0;
-
-        cellSurroundingNeighbors.forEach(([x, y]) => {
-          const newI = i + x;
-          const newJ = j + y;
-
-          if (
-            newI >= 0 &&
-            newI < numberOfRows &&
-            newJ >= 0 &&
-            newJ < numberColumns
-          ) {
-            neighbouringCells += grid[newI][newJ];
-          }
-        });
-
-        if (neighbouringCells < 2 || neighbouringCells > 3) {
-          gridCopy[i][j] = 0;
-        } else if (grid[i][j] === 0 && neighbouringCells === 3) {
-          gridCopy[i][j] = 1;
-        }
-      }
-    }
-
-    setGrid(gridCopy);
+    setGrid(gameLogic(grid, numberColumns, numberOfRows));
   }, []);
 
   useInterval(() => {
@@ -133,4 +99,4 @@ const App: FC = () => {
   );
 };
 
-export default App;
+export default Board;
