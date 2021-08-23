@@ -26,7 +26,7 @@ const App: FC = () => {
   const runningRef = useRef(isRunning);
   runningRef.current = isRunning;
 
-  const startGame = useCallback((grid) => {
+  const startGame = useCallback((grid: number[][]) => {
     if (!runningRef.current) return;
 
     let gridCopy = JSON.parse(JSON.stringify(grid));
@@ -61,7 +61,7 @@ const App: FC = () => {
 
   useInterval(() => {
     startGame(grid);
-  }, 1500);
+  }, 150);
 
   return (
     <>
