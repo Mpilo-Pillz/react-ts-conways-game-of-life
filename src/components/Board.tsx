@@ -4,30 +4,30 @@ import {
   plotTilesRandomly,
   resetGrid,
 } from "../helpers/board.helper";
-import { DeadOrAlive } from "../customTypes/game.types";
+import { BoardProps, DeadOrAlive } from "../customTypes/game.types";
 import useInterval from "./UseInterval";
 
-const numberColumns = 35;
-const numberOfRows = 25;
-
-const Board: FC = () => {
+const Board: FC<BoardProps> = ({ numberOfColumns, numberOfRows, interval }) => {
   const [grid, setGrid] = useState(() => {
-    return plotTilesRandomly(numberOfRows, numberColumns);
+    return plotTilesRandomly(numberOfRows, numberOfColumns);
   });
 
   const [isRunning, setIsRunning] = useState(false);
   const runningRef = useRef(isRunning);
   runningRef.current = isRunning;
 
-  const startGame = useCallback((grid: number[][]) => {
-    if (!runningRef.current) return;
+  const startGame = useCallback(
+    (grid: number[][]) => {
+      if (!runningRef.current) return;
 
-    setGrid(gameLogic(grid, numberColumns, numberOfRows));
-  }, []);
+      setGrid(gameLogic(grid, numberOfColumns, numberOfRows));
+    },
+    [numberOfColumns, numberOfRows]
+  );
 
   useInterval(() => {
     startGame(grid);
-  }, 150);
+  }, interval);
 
   return (
     <>
@@ -36,7 +36,7 @@ const Board: FC = () => {
         className="board"
         style={{
           display: "grid",
-          gridTemplateColumns: `repeat(${numberColumns}, 20px)`,
+          gridTemplateColumns: `repeat(${numberOfColumns}, 20px)`,
         }}
       >
         {grid.map((rows, outerIndex) =>
@@ -79,7 +79,7 @@ const Board: FC = () => {
           data-testid="randomize"
           className="board__button"
           onClick={() => {
-            setGrid(plotTilesRandomly(numberOfRows, numberColumns));
+            setGrid(plotTilesRandomly(numberOfRows, numberOfColumns));
           }}
         >
           Randomize
@@ -89,7 +89,7 @@ const Board: FC = () => {
           data-testid="clear"
           className="board__button"
           onClick={() => {
-            setGrid(resetGrid(numberOfRows, numberColumns));
+            setGrid(resetGrid(numberOfRows, numberOfColumns));
           }}
         >
           Clear

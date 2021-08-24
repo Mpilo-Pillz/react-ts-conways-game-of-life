@@ -27,11 +27,11 @@ export const plotTilesRandomly = (
 
 export const resetGrid = (
   numberOfRows: number,
-  numberColumns: number
+  numberOfColumns: number
 ): number[][] => {
   const rows = [];
   for (let i = 0; i < numberOfRows; i++) {
-    rows.push(Array.from(Array(numberColumns), () => 0));
+    rows.push(Array.from(Array(numberOfColumns), () => 0));
   }
 
   return rows;
@@ -39,12 +39,12 @@ export const resetGrid = (
 
 export function gameLogic(
   grid: number[][],
-  numberColumns: number,
+  numberOfColumns: number,
   numberOfRows: number
 ): number[][] {
   let gridCopy = JSON.parse(JSON.stringify(grid));
   for (let i = 0; i < numberOfRows; i++) {
-    for (let j = 0; j < numberColumns; j++) {
+    for (let j = 0; j < numberOfColumns; j++) {
       let neighbouringCells = 0;
 
       cellSurroundingNeighbors.forEach(([x, y]) => {
@@ -55,7 +55,7 @@ export function gameLogic(
           newI >= 0 &&
           newI < numberOfRows &&
           newJ >= 0 &&
-          newJ < numberColumns
+          newJ < numberOfColumns
         ) {
           neighbouringCells += grid[newI][newJ];
         }
@@ -68,5 +68,6 @@ export function gameLogic(
       }
     }
   }
+
   return gridCopy;
 }

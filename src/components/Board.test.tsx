@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 
 describe("Board components", () => {
   beforeEach(() => {
-    render(<Board />);
+    render(<Board numberOfColumns={35} numberOfRows={25} interval={1000} />);
   });
   test("Renders the board elements", () => {
     const board = screen.getByTestId("board");
