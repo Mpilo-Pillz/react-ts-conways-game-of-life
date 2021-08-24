@@ -53,6 +53,20 @@ describe("Cell mortality based on neighbors", () => {
     ]);
   });
 
+  test("Cell lives on to the next generation if it has two neighbors", () => {
+    const overpopulation = jest.fn().mockImplementation(() => [
+      [0, 1, 0],
+      [0, 1, 0],
+      [0, 1, 0],
+    ]);
+
+    expect(gameLogic(overpopulation(), 3, 3)).toEqual([
+      [0, 0, 0],
+      [1, 1, 1],
+      [0, 0, 0],
+    ]);
+  });
+
   test("Cells live when there is balance", () => {
     const sufficientNeighbors = jest.fn().mockImplementation(() => [
       [0, 1, 1],
