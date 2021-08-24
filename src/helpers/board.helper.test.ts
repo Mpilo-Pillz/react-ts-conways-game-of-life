@@ -54,16 +54,32 @@ describe("Cell mortality based on neighbors", () => {
   });
 
   test("Cell lives on to the next generation if it has two neighbors", () => {
-    const overpopulation = jest.fn().mockImplementation(() => [
+    const survival = jest.fn().mockImplementation(() => [
       [0, 1, 0],
       [0, 1, 0],
       [0, 1, 0],
     ]);
 
-    expect(gameLogic(overpopulation(), 3, 3)).toEqual([
+    expect(gameLogic(survival(), 3, 3)).toEqual([
       [0, 0, 0],
       [1, 1, 1],
       [0, 0, 0],
+    ]);
+  });
+
+  test("Cell dies by overpopulation if it has three live neighbors.", () => {
+    const overpopulation = jest.fn().mockImplementation(() => [
+      [0, 1, 1, 0],
+      [0, 1, 1, 1],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+    ]);
+
+    expect(gameLogic(overpopulation(), 4, 4)).toEqual([
+      [0, 1, 0, 1],
+      [0, 1, 0, 1],
+      [0, 0, 1, 0],
+      [0, 0, 0, 0],
     ]);
   });
 
