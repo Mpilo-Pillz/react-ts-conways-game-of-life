@@ -24,16 +24,46 @@ test("It should return an array with the element 1 representing the presence of 
   expect(hasLivingCell).toBe(true);
 });
 
-test("Cells should die of under population if they have fewer than 2 neighbors,", () => {
-  const fewerThanTwoNeighbors = jest.fn().mockImplementation(() => [
-    [0, 0, 1],
-    [0, 0, 0],
-    [1, 0, 0],
-  ]);
+describe("Cell mortality based on neighbors", () => {
+  test("Cells should die of under population if they have fewer than 2 neighbors,", () => {
+    const fewerThanTwoNeighbors = jest.fn().mockImplementation(() => [
+      [0, 0, 1],
+      [0, 0, 0],
+      [1, 0, 0],
+    ]);
 
-  expect(gameLogic(fewerThanTwoNeighbors(), 3, 3)).toEqual([
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
-  ]);
+    expect(gameLogic(fewerThanTwoNeighbors(), 3, 3)).toEqual([
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0],
+    ]);
+  });
+
+  test("Reproduction occurs and a dead cell becomes alive if it has three live neighbors.", () => {
+    const reproduction = jest.fn().mockImplementation(() => [
+      [0, 1, 1],
+      [0, 0, 1],
+      [0, 0, 0],
+    ]);
+
+    expect(gameLogic(reproduction(), 3, 3)).toEqual([
+      [0, 1, 1],
+      [0, 1, 1],
+      [0, 0, 0],
+    ]);
+  });
+
+  test("Cells live when there is balance", () => {
+    const sufficientNeighbors = jest.fn().mockImplementation(() => [
+      [0, 1, 1],
+      [0, 1, 1],
+      [0, 0, 0],
+    ]);
+
+    expect(gameLogic(sufficientNeighbors(), 3, 3)).toEqual([
+      [0, 1, 1],
+      [0, 1, 1],
+      [0, 0, 0],
+    ]);
+  });
 });
